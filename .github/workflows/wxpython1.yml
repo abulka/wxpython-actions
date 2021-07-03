@@ -1,4 +1,4 @@
-name: Basic deps test2
+name: Basic deps test of wxpython dependency
 on:
   push:
     branches: [ main ]
@@ -17,4 +17,11 @@ jobs:
         pip install wheel
         pip install -r requirements.txt
         pip install pyinstaller
-
+    - name: Run Python say hi
+      run: python -c "print('hi')"
+    - name: Run example app
+      run: python example_app.py
+    - name: Run Pyinstaller
+      run: |
+        pyinstaller example_app.py
+        ls -l dist/example_app/ 
