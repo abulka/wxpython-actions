@@ -1,2 +1,4 @@
 requests
+pydbg
 wxpython
+wxasync
