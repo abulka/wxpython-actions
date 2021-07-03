@@ -18,4 +18,4 @@ jobs:
         pip install -r requirements.txt
         pip install pyinstaller
     - name: Run Python
-      python -c "print('hi')"
+      run: python -c "print('hi')"
