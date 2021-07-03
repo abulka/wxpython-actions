@@ -25,3 +25,11 @@ jobs:
       run: |
         pyinstaller example_app.py
         ls -l dist/example_app/ 
+        dist/example_app/example_app
+    - name: Zip it up baby
+      run: zip -r example_app.zip dist/*
+    - name: Save it as an artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: example_app_artifact.zip
+        path: example_app.zip
