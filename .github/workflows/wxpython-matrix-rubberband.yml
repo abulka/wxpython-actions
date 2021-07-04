@@ -78,11 +78,10 @@ jobs:
     - name: Zip it up
       # run: zip -r dist.zip dist/rubber_band_async.app
       # run: zip -r dist.zip dist/rubber_band_async
-      # run: zip -r dist-${{ matrix.os }}.zip dist/
-      run: zip -r dist-${{ matrix.os }} dist/
+      run: zip -r dist-${{ matrix.os }}.zip dist/
 
     - name: Save it as an artifact
       uses: actions/upload-artifact@v2
       with:
         name: rubber-band-${{ matrix.os }}.zip
-        path: dist-${{ matrix.os }}
+        path: dist-${{ matrix.os }}.zip
