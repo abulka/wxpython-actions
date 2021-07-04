@@ -131,7 +131,7 @@ parts:
       - libbz2-1.0
       - libexpat1
       - libffi6
-      - libgdbm3
+      - libgdbm5
       - liblzma5
       - libncurses5
       - libreadline6
