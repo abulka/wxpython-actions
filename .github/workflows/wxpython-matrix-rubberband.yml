@@ -45,43 +45,48 @@ jobs:
 
         echo "$RUNNER_OS"
         echo "${{ matrix.os }}"
+        if [ "$RUNNER_OS" == "Linux" ]; then lsb_release -a fi  # report distro version
         
         if [ "$RUNNER_OS" == "Linux" ]; then
           pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/${{ matrix.os }} wxPython
-          pip install -r requirements-linux.txt
           sudo apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0
 
         elif [ "$RUNNER_OS" == "macOS" ]; then
-          pip install -r requirements.txt
+          pip install wxpython
 
         elif [ "$RUNNER_OS" == "Windows" ]; then
             # choco install important_windows_software
             echo "windows - TODO"
+
         else
             echo "$RUNNER_OS not supported"
             exit 1
         fi
 
+        pip install -r requirements.txt
         pip install pyinstaller
 
-    - name: Where are we
+    - name: Report Python version_info
       run: |
         python -c "import sys; print(sys.version_info)"
         uname -a
 
-    - name: Run Pyinstaller
+    - name: Build executable using Pyinstaller
       run: |
         # pyinstaller --windowed -F --noconfirm -i icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns rubber_band_async.py
         pyinstaller rubber_band_async_custom.spec
         ls -l dist/
 
-    - name: Zip it up
-      # run: zip -r dist.zip dist/rubber_band_async.app
-      # run: zip -r dist.zip dist/rubber_band_async
-      run: zip -r dist-${{ matrix.os }}.zip dist/
+    # No need to zip it up since Github Actions auto zips artifacts when they are downloaded, and there
+    # is no way around that https://github.com/actions/upload-artifact/issues/39 
+    # 
+    # - name: Zip up dist/
+    #   # run: zip -r dist.zip dist/rubber_band_async.app
+    #   # run: zip -r dist.zip dist/rubber_band_async
+    #   run: zip -r dist-${{ matrix.os }}.zip dist/
 
-    - name: Save it as an artifact
+    - name: Save generated executable file as an artifact
       uses: actions/upload-artifact@v2
       with:
         name: rubber-band-${{ matrix.os }}.zip
-        path: dist-${{ matrix.os }}.zip
+        path: dist/
