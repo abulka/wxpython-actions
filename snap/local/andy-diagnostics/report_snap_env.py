@@ -21,3 +21,6 @@ print("os.listdir()")
 print(os.listdir())
 print()
 
+print("sys.version")
+print(sys.version)
+print()

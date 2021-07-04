@@ -1,4 +1,4 @@
-name: Snapcrft linux test
+name: Snapcraft linux test
 
 on: push
 
@@ -18,7 +18,7 @@ jobs:
       - name: Use Snapcraft - show help
         run: snapcraft --help
 
-      # - name: Use Snapcraft - actually build a snap
+      # - name: Use Snapcraft - actually build a snap - needs multipass
       #   run: |
       #     time snapcraft --debug
       #     ls -l
