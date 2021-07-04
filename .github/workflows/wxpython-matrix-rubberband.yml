@@ -45,7 +45,9 @@ jobs:
 
         echo "$RUNNER_OS"
         echo "${{ matrix.os }}"
-        if [ "$RUNNER_OS" == "Linux" ]; then lsb_release -a fi  # report distro version
+        if [ "$RUNNER_OS" == "Linux" ]; then 
+          lsb_release -a 
+        fi  # report distro version
         
         if [ "$RUNNER_OS" == "Linux" ]; then
           pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/${{ matrix.os }} wxPython
