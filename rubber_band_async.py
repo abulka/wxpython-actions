@@ -1,5 +1,5 @@
 import wx
-from pydbg import dbg
+# from pydbg import dbg
 import time
 
 from wxasync import AsyncBind, WxAsyncApp, StartCoroutine
@@ -50,8 +50,10 @@ class SelectableFrame(wx.Frame):
         self.SetCursor(wx.Cursor(wx.CURSOR_ARROW))
         self.c2 = None  # ANDY
         print("mouse up")
-        dbg(self.c1)
-        dbg(self.c2)
+        # dbg(self.c1)
+        # dbg(self.c2)
+        print(self.c1)
+        print(self.c2)
         self.Refresh()
 
     def OnPaint(self, event):
