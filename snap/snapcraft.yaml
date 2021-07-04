@@ -1,5 +1,5 @@
 name: rubber-band-async # you probably want to 'snapcraft register <name>'
-version: git
+version: 'latest' # use 'git' (without quotes) to generate a snapfile named after the git commit e.g. rubber-band-async_0+git.6111883_amd64.snap 
 summary: Rubberband wxPython app with wxasync clock # 79 char long summary
 description: |
   Rubberband wxPython app with wxasync clock
@@ -80,7 +80,10 @@ parts:
         - libsdl1.2debian
         - libgtk2.0-0
         - libpcre3
-        - liblzma5        
+        - liblzma5
+        - libsdl2-mixer-2.0-0 
+        - libsdl2-image-2.0-0 
+        - libsdl2-2.0-0
     python-packages:
         - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
     requirements:
