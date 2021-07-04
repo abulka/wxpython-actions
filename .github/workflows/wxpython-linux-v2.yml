@@ -30,7 +30,8 @@ jobs:
         ls -l dist/
     - name: Zip it up
       # run: zip -r rubber_band_async.zip dist/
-      run: zip -r rubber_band_async.zip dist/rubber_band_async.app
+      # run: zip -r rubber_band_async.zip dist/rubber_band_async.app
+      run: zip -r rubber_band_async.zip dist/rubber_band_async
     - name: Save it as an artifact
       uses: actions/upload-artifact@v2
       with:
