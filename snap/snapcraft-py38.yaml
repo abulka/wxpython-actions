@@ -1,0 +1,185 @@
+# Awaiting response at 
+# https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/6
+# to the failure of this python 3.8 attempt
+
+name: rubber-band-async # you probably want to 'snapcraft register <name>'
+version: 'latest' # will generate e.g. 'rubber-band-async_latest_amd64.snap' - use 'git' (without quotes) to generate a snapfile named after the git commit e.g. rubber-band-async_0+git.6111883_amd64.snap 
+summary: Rubberband wxPython app with wxasync clock # 79 char long summary
+description: |
+  Rubberband wxPython app with wxasync clock
+
+  To build this snap:
+    snapcraft
+  If you get trouble
+    snapcraft clean
+
+  Install the snap locally
+    sudo snap install --devmode --dangerous *.snap
+    snap list
+
+  Run
+    rubber-band-async
+
+  Publish
+    snapcraft login (use ubuntu one auth)
+    snapcraft register rubber-band-async
+    snapcraft push --release=stable rubber-band-async_0.6_amd64.snap   <--- stable release
+
+
+grade: stable # devel # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
+base: core18
+
+apps:
+    rubber-band-async:
+        command: python3 $SNAP/rubber_band_async.py
+        extensions: [gnome-3-34]
+        plugs: [unity7, audio-playback, home, network]
+
+    #
+    # SUB-COMMANDS (diagnostic use only)
+    # 
+    # After building (snapcraft) and installing the snap locally (sudo snap install --devmode --dangerous *.snap),
+    # as well as being able to 'pynsource' from the terminal, you can run a subcommand with e.g. 'pynsource.report'
+    #
+    # For all python interpreter invocations (no script specified), both '' and site packages are automatically in sys path, $SNAP root is not.
+    # Also os.getcwd() is the host's not the inner snap filesystem!
+    #
+    # Run Python interpreter - run with 'pynsource.python'
+    # Run Python interpreter and trace imports - run with e.g. 'pynsource.python-v'
+
+    python:
+        command: python3
+    python-v:
+        command: python3 -V
+    python-vers:
+        command: python3 -c "import sys; print(sys.version)"
+    python-vvv:
+        command: python3 -vvv
+    report:
+        command: python3 $SNAP/report_snap_env.py
+
+parts:
+  copy-stuff:
+    plugin: dump
+    source: .
+  copy-stuff-diagnostics:
+    plugin: dump
+    source: ./snap/local/andy-diagnostics    
+  rubber-band-async:
+    after:
+      - python38
+    plugin: python
+    python-version: python3
+    source: .
+    stage-packages:
+        - libssl-dev
+        - libjpeg-dev
+        - libtiff-dev
+        - libsdl1.2-dev
+        - libnotify-dev
+        - freeglut3
+        - ibus-gtk3
+        - libwebkitgtk-3.0-0
+        - zlib1g
+        - libsm6
+        - libpulse0
+        - libslang2
+        - libsdl1.2debian
+        - libgtk2.0-0
+        - libpcre3
+        - liblzma5
+        - libsdl2-mixer-2.0-0 
+        - libsdl2-image-2.0-0 
+        - libsdl2-2.0-0
+    python-packages:
+        # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
+        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
+    requirements:
+        - /root/project/requirements-linux-18.04.txt
+
+  # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/5
+  python38:
+    source: https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz
+    source-type: tar
+    source-checksum: md5/3000cf50aaa413052aef82fd2122ca78
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+      # Enabling this will make the build times go up significantly because it
+      # turns on link time optimizations and profile guided optimizations.
+      #
+      # For PGO, python is compiled twice. Once to collect profiling data (by
+      # from running all UTs) and once to create an optimized build based on
+      # that data.
+      #
+      # Unfortunately, one of the unit tests, test_socket, hangs for some
+      # reason and it seems to be a known issue. For now just disable
+      # optimizations as a workaround.
+      #
+      # - --enable-optimizations
+    build-packages:
+      # not needed: tk-dev
+      - libbz2-dev
+      - libexpat1-dev
+      - libffi-dev
+      - libgdbm-dev
+      - liblzma-dev
+      - libncurses5-dev
+      - libreadline-dev
+      - libsqlite3-dev
+      - libssl-dev
+      # - libssl1.0-dev - thought I would need this but seems ok
+      - libzip-dev
+      - uuid-dev
+    stage-packages:
+      # not needed: tk8.6
+      - libbz2-1.0
+      - libexpat1
+      - libffi6
+      - libgdbm5
+      - liblzma5
+      - libncurses5
+      # - libreadline6
+      - libreadline7
+      - libsqlite3-0
+      - libssl1.0.0
+      - libzip4
+      - uuid-runtime
+    override-stage: |
+      # We want the latest pip to be able to install pyproject.toml based projects
+      PYTHONUSERBASE="$SNAPCRAFT_PART_INSTALL/usr" python3.8 -m pip install --user --upgrade pip wheel
+
+      # Apply the same shebang rewrite as done by snapcraft
+      find $SNAPCRAFT_PART_INSTALL/usr/bin/ -maxdepth 1 -mindepth 1 -type f -executable -exec \
+        sed -i                                                                                \
+          "s|^#!${SNAPCRAFT_PART_INSTALL}/usr/bin/python3.8$|#!/usr/bin/env python3|" {} \;
+
+      snapcraftctl stage
+    filesets:
+      exclusion:
+        - -etc
+        - -lib/systemd
+        - -usr/bin/2to3
+        - -usr/bin/2to3-3.8
+        - -usr/bin/deb-systemd-helper
+        - -usr/bin/deb-systemd-invoke
+        - -usr/bin/easy_install-3.8
+        - -usr/bin/idle3
+        - -usr/bin/idle3.8
+        - -usr/bin/pip3
+        - -usr/bin/pip3.8
+        - -usr/bin/pydoc3
+        - -usr/bin/pydoc3.8
+        - -usr/bin/python3.8-config
+        - -usr/bin/python3-config
+        - -usr/bin/uuidgen
+        - -usr/include
+        - -usr/lib/*.a
+        - -usr/lib/pkgconfig
+        - -usr/lib/python3.8/test
+        - -usr/sbin
+        - -usr/share
+        - -var
+    prime:
+      - "$exclusion"
