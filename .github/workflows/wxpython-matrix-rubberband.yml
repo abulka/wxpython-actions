@@ -10,14 +10,19 @@ jobs:
     strategy:
       matrix:
         # os: [macos-latest, ubuntu-18.04, windows-latest]
-        os: [macos-latest, ubuntu-18.04]
+        os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
+
+    # 20.04 only has python 3.8 wheels at the moment
+    # so might have to drop back to 3.8 for everything, unless can change python version
+    # somehow depending on os?
 
     steps:
     - uses: actions/checkout@v2       
     - name: Setup Python please
       uses: actions/setup-python@v2
       with:
-        python-version: 3.9    
+        # python-version: 3.9    
+        python-version: 3.8 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -25,8 +30,11 @@ jobs:
 
         echo "$RUNNER_OS"
 
+        
         if [ "$RUNNER_OS" == "Linux" ]; then
-          pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+          #                 https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython
+          # pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+          pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/${{ matrix.os }} wxPython
           pip install -r requirements-linux-18.04.txt
           sudo apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0
 
