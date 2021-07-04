@@ -1,0 +1,65 @@
+name: Real wxpython linux 18.04 
+on:
+  push:
+    branches: [ main ]
+jobs:
+  buildfun:
+    # runs-on: ubuntu-18.04
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        # os: [macos-latest, ubuntu-18.04, windows-latest]
+        os: [macos-latest, ubuntu-18.04]
+
+    steps:
+    - uses: actions/checkout@v2       
+    - name: Setup Python please
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel
+
+        echo "$RUNNER_OS"
+
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+          pip install -r requirements-linux-18.04.txt
+          sudo apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0
+
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+          pip install -r requirements.txt
+
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+            # choco install important_windows_software
+        else
+            echo "$RUNNER_OS not supported"
+            exit 1
+        fi
+
+        pip install pyinstaller
+
+    - name: Where are we
+      run: |
+        python -c "import sys; print(sys.version_info)"
+        uname -a
+
+    - name: Run Pyinstaller
+      run: |
+        # pyinstaller --windowed -F --noconfirm -i icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns rubber_band_async.py
+        pyinstaller rubber_band_async_custom.spec
+        ls -l dist/
+
+    - name: Zip it up
+      run: zip -r rubber_band_async_${{ matrix.os }}.zip dist/
+      # run: zip -r rubber_band_async.zip dist/rubber_band_async.app
+      # run: zip -r rubber_band_async.zip dist/rubber_band_async
+
+    - name: Save it as an artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: rubber_band_async_${{ matrix.os }}_artifact.zip
+        path: rubber_band_async_${{ matrix.os }}.zip
