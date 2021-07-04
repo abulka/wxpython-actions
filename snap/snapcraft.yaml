@@ -1,0 +1,87 @@
+name: rubber-band-async # you probably want to 'snapcraft register <name>'
+version: git
+summary: Rubberband wxPython app with wxasync clock # 79 char long summary
+description: |
+  Rubberband wxPython app with wxasync clock
+
+  To build this snap:
+    snapcraft
+  If you get trouble
+    snapcraft clean
+
+  Install the snap locally
+    sudo snap install --devmode --dangerous *.snap
+    snap list
+
+  Run
+    rubber-band-async
+
+  Publish
+    snapcraft login (use ubuntu one auth)
+    snapcraft register rubber-band-async
+    snapcraft push --release=stable rubber-band-async_0.6_amd64.snap   <--- stable release
+
+
+grade: stable # devel # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
+base: core18
+
+apps:
+    rubber-band-async:
+        command: python3 $SNAP/rubber_band_async.py
+        extensions: [gnome-3-28]
+        plugs: [unity7, audio-playback, home, network]
+
+    #
+    # SUB-COMMANDS (diagnostic use only)
+    # 
+    # After building (snapcraft) and installing the snap locally (sudo snap install --devmode --dangerous *.snap),
+    # as well as being able to 'pynsource' from the terminal, you can run a subcommand with e.g. 'pynsource.report'
+    #
+    # For all python interpreter invocations (no script specified), both '' and site packages are automatically in sys path, $SNAP root is not.
+    # Also os.getcwd() is the host's not the inner snap filesystem!
+    #
+    # Run Python interpreter - run with 'pynsource.python'
+    # Run Python interpreter and trace imports - run with e.g. 'pynsource.python-v'
+
+    python:
+        command: python3
+    python-v:
+        command: python3 -v
+    python-vvv:
+        command: python3 -vvv
+    report:
+        command: python3 $SNAP/report_snap_env.py
+
+parts:
+  copy-stuff:
+    plugin: dump
+    source: .
+  copy-stuff-diagnostics:
+    plugin: dump
+    source: ./snap/local/andy-diagnostics    
+  rubber-band-async:
+    plugin: python
+    python-version: python3
+    source: .
+    stage-packages:
+        - libssl-dev
+        - libjpeg-dev
+        - libtiff-dev
+        - libsdl1.2-dev
+        - libnotify-dev
+        - freeglut3
+        - ibus-gtk3
+        - libwebkitgtk-3.0-0
+        - zlib1g
+        - libsm6
+        - libpulse0
+        - libslang2
+        - libsdl1.2debian
+        - libgtk2.0-0
+        - libpcre3
+        - liblzma5        
+    python-packages:
+        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
+    requirements:
+        - /root/project/requirements-linux-18.04.txt

@@ -14,5 +14,12 @@ jobs:
         uses: samuelmeuli/action-snapcraft@v1
 
       # You can now run Snapcraft shell commands
-      - name: Use Snapcraft
+      
+      - name: Use Snapcraft - show help
         run: snapcraft --help
+
+      - name: Use Snapcraft - actually build a snap
+        run: |
+          time snapcraft --debug
+          ls -l
+          unsquashfs -l *.snap
