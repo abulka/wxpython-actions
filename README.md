@@ -19,5 +19,21 @@ Without `--windowed`, you won't get an app bundle you can run. It will complain 
 [Doco](https://www.blog.pythonlibrary.org/2019/03/19/distributing-a-wxpython-application/) on Pyinstaller.
 
 
+# github-actions-run-step-on-specific-os
 
+https://stackoverflow.com/questions/57946173/github-actions-run-step-on-specific-os
+
+```yml
+- name:  Install
+  run:   |
+         if [ "$RUNNER_OS" == "Linux" ]; then
+              apt install important_linux_software
+         elif [ "$RUNNER_OS" == "Windows" ]; then
+              choco install important_windows_software
+         else
+              echo "$RUNNER_OS not supported"
+              exit 1
+         fi
+  shell: bash
+```
 
