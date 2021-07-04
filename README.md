@@ -7,8 +7,12 @@ options to pyinstaller
 - `--windowed` is to create a real mac bundle
 - `--noconfirm` is to say yes to delete the existing files
 - `-i FILE.icns`  specify an icon
-- 
+  
+Example:
+
     pyinstaller --windowed -F --noconfirm rubber_band_async.py
+
+See also `bin/build` script.
 
 ## Mac
 
@@ -36,4 +40,10 @@ https://stackoverflow.com/questions/57946173/github-actions-run-step-on-specific
          fi
   shell: bash
 ```
+
+## Spec files
+
+Spec files are auto generated, but once generated, you can tweak them.  Looks like there is no option to pass `info.plist` via command line, so you *have* to resort to running from a spec file
+
+    pyinstaller rubber_band_async_custom.spec
 
