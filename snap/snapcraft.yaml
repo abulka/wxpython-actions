@@ -124,6 +124,7 @@ parts:
       - libreadline-dev
       - libsqlite3-dev
       - libssl-dev
+      # - libssl1.0-dev - thought I would need this but seems ok
       - libzip-dev
       - uuid-dev
     stage-packages:
@@ -134,7 +135,8 @@ parts:
       - libgdbm5
       - liblzma5
       - libncurses5
-      - libreadline6
+      # - libreadline6
+      - libreadline7
       - libsqlite3-0
       - libssl1.0.0
       - libzip4
