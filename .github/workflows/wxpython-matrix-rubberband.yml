@@ -32,12 +32,20 @@ jobs:
     # pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
 
     steps:
+    - name: Set env var
+      env: |
+        if [ "$RUNNER_OS" == "Linux" ]; then 
+          PY_VERS: 3.8
+        else  
+          PY_VERS: 3.9
+        fi      
     - uses: actions/checkout@v2       
     - name: Setup Python please
       uses: actions/setup-python@v2
       with:
         # python-version: 3.9    
         python-version: 3.8 
+        # python-version: ${{ env.PY_VERS }}
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -45,9 +53,10 @@ jobs:
 
         echo "$RUNNER_OS"
         echo "${{ matrix.os }}"
-        if [ "$RUNNER_OS" == "Linux" ]; then 
+        if [ "$RUNNER_OS" == "Linux" ]; then    # report linux distro version
           lsb_release -a 
-        fi  # report distro version
+        fi
+        echo "Ideally using Python ${{ env.PY_VERS }}"
         
         if [ "$RUNNER_OS" == "Linux" ]; then
           pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/${{ matrix.os }} wxPython
@@ -90,5 +99,6 @@ jobs:
     - name: Save generated executable file as an artifact
       uses: actions/upload-artifact@v2
       with:
-        name: rubber-band-${{ matrix.os }}.zip
+        # name: rubber-band-${{ matrix.os }}.zip
+        name: rubber-band-${{ matrix.os }}
         path: dist/
