@@ -34,11 +34,11 @@ jobs:
           ls -l
           # unsquashfs -l *.snap
 
-    - name: Zip it up
-      # run: zip -r rubber_band_async.zip dist/
-      run: zip mysnap.zip *.snap
-    - name: Save it as an artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: mysnap_artifact.zip
-        path: mysnap.zip
+      - name: Zip it up
+        # run: zip -r rubber_band_async.zip dist/
+        run: zip mysnap.zip *.snap
+      - name: Save it as an artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: mysnap_artifact.zip
+          path: mysnap.zip
