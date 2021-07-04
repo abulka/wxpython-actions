@@ -23,7 +23,7 @@ jobs:
         uname -a
     - name: Run Pyinstaller
       run: |
-        pyinstaller -F rubber_band_async.py
+        pyinstaller --windowed -F --noconfirm rubber_band_async.py
         ls -l dist/
     - name: Zip it up
       run: zip -r rubber_band_async.zip dist/rubber_band_async
