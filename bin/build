@@ -1,0 +1,1 @@
+pyinstaller --windowed -F --noconfirm -i icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns rubber_band_async.py

@@ -31,8 +31,8 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False )
+          console=False , icon='icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns')
 app = BUNDLE(exe,
              name='rubber_band_async.app',
-             icon=None,
+             icon='icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns',
              bundle_identifier=None)
