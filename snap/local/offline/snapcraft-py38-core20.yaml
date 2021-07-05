@@ -1,16 +1,5 @@
 # This fails due to No module named 'pkg_resources' error. I updated to core20, gnome-3-38 and the list of staged packages seems ok
 # with only one change. Oh well.
-# 
-# Building rubber-band-async 
-# + snapcraftctl build
-# + python3 -m venv /root/parts/rubber-band-async/install
-# + SNAPCRAFT_PYTHON_VENV_INTERP_PATH=/root/parts/rubber-band-async/install/bin/python3
-# + pip install -U setuptools distribute https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
-# Traceback (most recent call last):
-#   File "/snap/gnome-3-38-2004-sdk/current/usr/bin/pip", line 6, in <module>
-#     from pkg_resources import load_entry_point
-# ModuleNotFoundError: No module named 'pkg_resources'
-# Failed to build 'rubber-band-async'.    
 
 name: rubber-band-async # you probably want to 'snapcraft register <name>'
 version: 'latest' # will generate e.g. 'rubber-band-async_latest_amd64.snap' - use 'git' (without quotes) to generate a snapfile named after the git commit e.g. rubber-band-async_0+git.6111883_amd64.snap 
@@ -75,15 +64,8 @@ parts:
     source: .
   copy-stuff-diagnostics:
     plugin: dump
-    source: ./snap/local/andy-diagnostics
+    source: ./snap/local/andy-diagnostics    
   rubber-band-async:
-    
-    # attempt to avoid 'No module named pkg_resources' error
-    prepare: |
-      # sudo apt-get install --reinstall python-pkg-resources
-      pip install --upgrade setuptools
-      pip install --upgrade distribute 
-
     plugin: python
     # python-version: python3  # remove cos error: Additional properties are not allowed ('python-version' was unexpected)
     source: .
@@ -109,8 +91,18 @@ parts:
         - libsdl2-image-2.0-0 
         - libsdl2-2.0-0
     python-packages:
-      # - setuptools  # attempt to avoid 'No module named pkg_resources' error, but how to upgrade? perhaps --force-reinstall ?
-      # - distribute  # as above
+      # Building rubber-band-async 
+      # + snapcraftctl build
+      # + python3 -m venv /root/parts/rubber-band-async/install
+      # + SNAPCRAFT_PYTHON_VENV_INTERP_PATH=/root/parts/rubber-band-async/install/bin/python3
+      # + pip install -U setuptools distribute https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
+      # Traceback (most recent call last):
+      #   File "/snap/gnome-3-38-2004-sdk/current/usr/bin/pip", line 6, in <module>
+      #     from pkg_resources import load_entry_point
+      # ModuleNotFoundError: No module named 'pkg_resources'
+      # Failed to build 'rubber-band-async'.    
+      - setuptools  # attempt to avoid 'No module named pkg_resources' error, but how to upgrade? perhaps --force-reinstall ?
+      - distribute  # as above
       # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
       # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython
       - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
