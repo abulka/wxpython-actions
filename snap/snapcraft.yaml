@@ -1,50 +1,3 @@
-# This fails due to No module named 'pkg_resources' error. I updated to core20, gnome-3-38 and the list of staged packages seems ok
-# with only one change. Oh well.
-# 
-# Building rubber-band-async 
-# + snapcraftctl build
-# + python3 -m venv /root/parts/rubber-band-async/install
-# + SNAPCRAFT_PYTHON_VENV_INTERP_PATH=/root/parts/rubber-band-async/install/bin/python3
-# + pip install -U setuptools distribute https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
-# Traceback (most recent call last):
-#   File "/snap/gnome-3-38-2004-sdk/current/usr/bin/pip", line 6, in <module>
-#     from pkg_resources import load_entry_point
-# ModuleNotFoundError: No module named 'pkg_resources'
-# Failed to build 'rubber-band-async'.    
-# 
-# Error discussion https://stackoverflow.com/questions/7446187/no-module-named-pkg-resources
-# 
-# Attempt to avoid 'No module named pkg_resources' error
-# Attempts to fix: (note this is the only way I can run arbitrary bash commands inside
-#  the core20 vm) was to use override-build on a part. And since each part MUST have
-# a plugin: I just used dump plugin again - harmless enough. Wish they provided a bash plugin 
-# though there are 
-# 
-# All these failed to fix the problem 😤
-# 
-# fixxx:
-#   override-build: |
-#     pip install --upgrade setuptools  <---- attempt to do this triggers same 'No module named pkg_resources' error
-#     pip install --upgrade distribute   
-#   plugin: dump                            <---- irrelevant, needed something, cos 'plugin' is a required property
-#   source: ./snap/local/andy-diagnostics   <---- irrelevant, specify any dummy file
-# 
-# rubber-band-async:
-#   plugin: python
-#   source: .
-#   python-packages:
-#     - setuptools  <----- didn't help, attempt to avoid 'No module named pkg_resources' error, but how to upgrade? perhaps --force-reinstall ?
-#     - distribute  <----- didn't help, deprecated anyway apparently
-# 
-# this seemed to work!
-# 
-# fixxx:
-#   override-build: |
-#     sudo apt-get install --reinstall python3-pkg-resources   <--- runs ok SEEMS to fix problem! 
-#   plugin: dump                              <---- irrelevant
-#   source: ./snap/local/andy-diagnostics     <---- irrelevant
-# 
-
 name: rubber-band-async # you probably want to 'snapcraft register <name>'
 version: 'latest' # will generate e.g. 'rubber-band-async_latest_amd64.snap' - use 'git' (without quotes) to generate a snapfile named after the git commit e.g. rubber-band-async_0+git.6111883_amd64.snap 
 summary: Rubberband wxPython app with wxasync clock # 79 char long summary
@@ -71,14 +24,12 @@ description: |
 
 grade: stable # devel # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
-base: core20
+base: core18
 
 apps:
     rubber-band-async:
         command: python3 $SNAP/rubber_band_async.py
-        # command: python3 $SNAP/rubber_band_async.py  <-- failed? Failed to generate snap metadata: The specified command 'python3 $SNAP/rubber_band_async.py' defined in the app 'rubber-band-async' does not exist.
-        # command: /usr/bin/env/python3 $SNAP/rubber_band_async.py  <--- fails Failed to generate snap metadata: The specified command '/usr/bin/env/python3 $SNAP/rubber_band_async.py' defined in the app 'rubber-band-async' does not match the pattern expected by snapd. The command must consist only of alphanumeric characters, spaces, and the following special characters: / . _ # : $ -
-        extensions: [gnome-3-38]
+        extensions: [gnome-3-34]
         plugs: [unity7, audio-playback, home, network]
 
     #
@@ -110,18 +61,10 @@ parts:
     source: .
   copy-stuff-diagnostics:
     plugin: dump
-    source: ./snap/local/andy-diagnostics
-
-  # fix-no-module-named-pkg_resources:
-  fixxxx:
-    override-build: |
-      sudo apt-get install --reinstall python3-pkg-resources
-    plugin: dump
-    source: ./snap/local/andy-diagnostics
-
+    source: ./snap/local/andy-diagnostics    
   rubber-band-async:
     plugin: python
-    # python-version: python3  # core20, remove cos error: Additional properties are not allowed ('python-version' was unexpected)
+    python-version: python3
     source: .
     stage-packages:
         - libssl-dev
@@ -131,8 +74,7 @@ parts:
         - libnotify-dev
         - freeglut3
         - ibus-gtk3
-        # - libwebkitgtk-3.0-0 <------ the only change core18 -> core20 in this stage-packages section
-        - libwebkit2gtk-4.0-37
+        - libwebkitgtk-3.0-0
         - zlib1g
         - libsm6
         - libpulse0
@@ -145,14 +87,6 @@ parts:
         - libsdl2-image-2.0-0 
         - libsdl2-2.0-0
     python-packages:
-      # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
-      # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython
-      - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
+        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
     requirements:
-      - /root/project/requirements.txt
-
-    # attempt to fix not being able to find python3
-    # https://forum.snapcraft.io/t/python-plugin-on-core20-cant-find-ensurepip/23896/5
-    build-environment:
-          - PATH: /usr/bin:$PATH
-          - PYTHONPATH: ''
+        - /root/project/requirements-linux-18.04.txt
