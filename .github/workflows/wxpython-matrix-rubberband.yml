@@ -11,7 +11,8 @@ jobs:
       matrix:
         # os: [macos-latest, ubuntu-18.04, windows-latest]
         # os: [macos-latest]
-        os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
+        # os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
+        os: [windows-latest]
 
     # job level env
     env:
@@ -55,7 +56,7 @@ jobs:
 
         elif [ "$RUNNER_OS" == "Windows" ]; then
             # choco install important_windows_software
-            echo "windows - TODO"
+            pip install wxpython
 
         else
             echo "$RUNNER_OS not supported"
