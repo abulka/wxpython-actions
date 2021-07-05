@@ -34,7 +34,7 @@ jobs:
       run: |
         echo "PY_VERS is ${{ env.PY_VERS }} aka $PY_VERS"
         echo "PYTHON_VERSION is ${{ env.PYTHON_VERSION }} aka $PYTHON_VERSION"
-        echo $MY_ENV_1, $MY_ENV_2
+        echo $MY_ENV_1, $MY_ENV_2, ${{ env.MY_ENV_1 }}
 
     - uses: actions/checkout@v2       
     - name: Setup Python please

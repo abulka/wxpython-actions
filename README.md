@@ -87,18 +87,19 @@ Note re linux installs
 
 # Github Actions ENV vars
 
+You can set environment variables using an `env:` entry, at a job or step level.
 
 https://github.com/actions/starter-workflows/issues/68
 
-The pain is that when you set variables in a step in your workflow, further steps can NOT see the VAR 🙊.
+> The pain is that when you set variables in a step in your workflow, further steps can NOT see the VAR 🙊.
 
 > Each step runs in its own process in the virtual environment and has access to the workspace and filesystem. Because steps run in their own process, changes to environment variables are not preserved between steps.
 
-Officially you have to re-set VAR at each `step`. This sucks.
+> Officially you have to re-set VAR at each `step`. This sucks.
 
-## job level
+Then GitHub Actions finally allowed [job-wide](https://github.blog/changelog/2019-10-01-github-actions-new-workflow-syntax-features/#env-at-the-workflow-and-job-level) level environment variables (note, not workflow wide - just job wide). E.g.
 
-> https://github.blog/changelog/2019-10-01-github-actions-new-workflow-syntax-features/#env-at-the-workflow-and-job-level says that env variable can be set at workflow or job level, but it's not true: it can be set at `job` or `step` level only (or at least only these are documented).
+## Example of setting job level ENV vars
 
 ```yml
 jobs:
@@ -116,20 +117,35 @@ jobs:
         echo $MY_ENV_1, $MY_ENV_2, ${{ env.MY_ENV_1 }}       
 ```
 
-## workarounds
+Note the env vars are visible at each step level.
 
-workaround is (untried)
-https://github.com/Actions-R-Us/gh-actions-samples/blob/ffac4047d7d97409180efad5c503b4afb6c2a289/.github/workflows/step_param_from_env.yml#L21
+## Conditional setting of env variables
+
+Sometimes we want to set an env var conditionally, or at a step level, and let other steps see it.
+
+Unfortunately job level env vars can't be done conditionally, because the `env:` syntax does not allow any conditonality syntax. E.g. Neither
 
 ```yml
-- name: Export Script Parameter
-  run: |
-       echo "::set-env name=MY_ACTION_SCRIPT::.github/step_param_from_env.sh"
-  shell: bash
+if: ${{ github.ref == 'refs/heads/main' }}
 ```
 
-this works
-https://github.com/actions/toolkit/issues/641
+nor the more bash oriented if used in `run`
+
+```
+run: |
+  if [ "$RUNNER_OS" == "Linux" ]; then
+  fi
+```
+
+will work inside an `env:`.
+
+Whilst `if:` conditionality syntax works inside a jobs section (running the job under a condition) that turns the whole job on or off, which is too coarse grained since we usually want to define an intelligent single job and keep things DRY.
+
+Luckily, since `if:` conditionality syntax works for steps (running the step under a condition), we can conditionally set job wide environment variables inside steps that are first in the array of steps in a job. But we need to use specific syntax that sets the environment variable permanently, because normally env vars are lost after each step completes.
+
+## Techniques for setting job wide ENV vars inside steps
+
+This [technique](https://github.com/actions/toolkit/issues/641) seems the simplest, and works OK
 
 ```yml
 steps:
@@ -139,3 +155,13 @@ steps:
 - name: Report env using technique 2
   run: echo "PYTHON_VERSION is ${{ env.PYTHON_VERSION }} aka $PYTHON_VERSION"
 ```
+
+This is [another technique](https://github.com/Actions-R-Us/gh-actions-samples/blob/ffac4047d7d97409180efad5c503b4afb6c2a289/.github/workflows/step_param_from_env.yml#L21) but I have not tried it
+
+```yml
+- name: Export Script Parameter
+  run: |
+       echo "::set-env name=MY_ACTION_SCRIPT::.github/step_param_from_env.sh"
+  shell: bash
+```
+
