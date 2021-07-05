@@ -36,11 +36,12 @@ jobs:
       env:
           PY_VERS: 3.9
       run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
-    # - name: Set env var 3.9 conditionally
+    - name: Set env var 3.9 conditionally
     #   if: "$RUNNER_OS" == "Linux"
     #   env:
     #       PY_VERS: 3.8
     #   run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
+      run: echo "PY_VERS is ${{ env.PY_VERS }} aka $PY_VERS"
     - uses: actions/checkout@v2       
     - name: Setup Python please
       uses: actions/setup-python@v2
@@ -58,7 +59,7 @@ jobs:
         if [ "$RUNNER_OS" == "Linux" ]; then    # report linux distro version
           lsb_release -a 
         fi
-        echo "Ideally using Python ${{ env.PY_VERS }}"
+        echo "Ideally using Python $PY_VERS"
         
         if [ "$RUNNER_OS" == "Linux" ]; then
           pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/${{ matrix.os }} wxPython
