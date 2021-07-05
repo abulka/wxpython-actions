@@ -1,5 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import platform
+
+icns = 'ico' if platform.system() == "Windows" else 'icns'
 
 block_cipher = None
 
@@ -31,7 +34,8 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns')
+          console=False,
+          icon=f'icons/Dakirby309-Simply-Styled-Mac-Front-Row.{iconExt}')
 app = BUNDLE(exe,
              name='rubber_band_async.app',
              icon='icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns',

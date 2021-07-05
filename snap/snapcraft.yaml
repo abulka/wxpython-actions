@@ -64,7 +64,7 @@ parts:
     source: ./snap/local/andy-diagnostics    
   rubber-band-async:
     plugin: python
-    python-version: python3
+    # python-version: python3  # Additional properties are not allowed ('python-version' was unexpected)
     source: .
     stage-packages:
         - libssl-dev
