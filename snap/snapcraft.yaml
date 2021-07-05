@@ -76,14 +76,13 @@ parts:
   copy-stuff-diagnostics:
     plugin: dump
     source: ./snap/local/andy-diagnostics
-  rubber-band-async:
-    
+  fixxxxx:
     # attempt to avoid 'No module named pkg_resources' error
     prepare: |
       # sudo apt-get install --reinstall python-pkg-resources
       pip install --upgrade setuptools
-      pip install --upgrade distribute 
-
+      pip install --upgrade distribute   
+  rubber-band-async:
     plugin: python
     # python-version: python3  # remove cos error: Additional properties are not allowed ('python-version' was unexpected)
     source: .
