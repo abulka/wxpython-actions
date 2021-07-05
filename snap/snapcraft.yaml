@@ -74,7 +74,8 @@ parts:
         - libnotify-dev
         - freeglut3
         - ibus-gtk3
-        - libwebkitgtk-3.0-0
+        # - libwebkitgtk-3.0-0
+        - libwebkit2gtk-4.0-37
         - zlib1g
         - libsm6
         - libpulse0
