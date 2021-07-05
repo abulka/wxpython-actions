@@ -94,16 +94,48 @@ The pain is that when you set variables in a step in your workflow, further step
 
 > Each step runs in its own process in the virtual environment and has access to the workspace and filesystem. Because steps run in their own process, changes to environment variables are not preserved between steps.
 
-Officially you have to re-set VAR at each step. This sucks.
+Officially you have to re-set VAR at each `step`. This sucks.
 
+## job level
 
-workaround is
+> https://github.blog/changelog/2019-10-01-github-actions-new-workflow-syntax-features/#env-at-the-workflow-and-job-level says that env variable can be set at workflow or job level, but it's not true: it can be set at `job` or `step` level only (or at least only these are documented).
+
+```yml
+jobs:
+  buildfun:
+    runs-on: ubuntu-18.04
+
+    # job level env 
+    env:
+      MY_ENV_1: My environment variable 1
+      MY_ENV_2: My environment variable 2
+
+    steps:
+    - name: Report env
+      run: |
+        echo $MY_ENV_1, $MY_ENV_2, ${{ env.MY_ENV_1 }}       
+```
+
+## workarounds
+
+workaround is (untried)
 https://github.com/Actions-R-Us/gh-actions-samples/blob/ffac4047d7d97409180efad5c503b4afb6c2a289/.github/workflows/step_param_from_env.yml#L21
 
 ```yml
-    - name: Export Script Parameter
-      run: |
-           echo "::set-env name=MY_ACTION_SCRIPT::.github/step_param_from_env.sh"
-      shell: bash
+- name: Export Script Parameter
+  run: |
+       echo "::set-env name=MY_ACTION_SCRIPT::.github/step_param_from_env.sh"
+  shell: bash
 ```
 
+this works
+https://github.com/actions/toolkit/issues/641
+
+```yml
+steps:
+- name: Set env var 3.9 using technique 2
+  run: echo "PYTHON_VERSION=3.7" >> $GITHUB_ENV
+
+- name: Report env using technique 2
+  run: echo "PYTHON_VERSION is ${{ env.PYTHON_VERSION }} aka $PYTHON_VERSION"
+```
