@@ -75,8 +75,9 @@ base: core20
 
 apps:
     rubber-band-async:
+        command: python3 $SNAP/rubber_band_async.py
         # command: python3 $SNAP/rubber_band_async.py  <-- failed? Failed to generate snap metadata: The specified command 'python3 $SNAP/rubber_band_async.py' defined in the app 'rubber-band-async' does not exist.
-        command: /usr/bin/env/python3 $SNAP/rubber_band_async.py
+        # command: /usr/bin/env/python3 $SNAP/rubber_band_async.py  <--- fails Failed to generate snap metadata: The specified command '/usr/bin/env/python3 $SNAP/rubber_band_async.py' defined in the app 'rubber-band-async' does not match the pattern expected by snapd. The command must consist only of alphanumeric characters, spaces, and the following special characters: / . _ # : $ -
         extensions: [gnome-3-38]
         plugs: [unity7, audio-playback, home, network]
 
@@ -149,3 +150,9 @@ parts:
       - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
     requirements:
       - /root/project/requirements.txt
+
+    # attempt to fix not being able to find python3
+    # https://forum.snapcraft.io/t/python-plugin-on-core20-cant-find-ensurepip/23896/5
+    build-environment:
+          - PATH: /usr/bin:$PATH
+          - PYTHONPATH: ''
