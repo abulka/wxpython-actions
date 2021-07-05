@@ -10,8 +10,8 @@ jobs:
     strategy:
       matrix:
         # os: [macos-latest, ubuntu-18.04, windows-latest]
-        # os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
-        os: [macos-latest]
+        # os: [macos-latest]
+        os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
 
     # job level env
     env:

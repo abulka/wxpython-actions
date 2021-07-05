@@ -166,7 +166,7 @@ steps:
   run: echo "PYTHON_VERSION is ${{ env.PYTHON_VERSION }} aka $PYTHON_VERSION"
 ```
 
-This is [another technique](https://github.com/Actions-R-Us/gh-actions-samples/blob/ffac4047d7d97409180efad5c503b4afb6c2a289/.github/workflows/step_param_from_env.yml#L21) but I have not tried it
+This is [another technique](https://github.com/Actions-R-Us/gh-actions-samples/blob/ffac4047d7d97409180efad5c503b4afb6c2a289/.github/workflows/step_param_from_env.yml#L21) but I have not tried it. Note this is [deprecated](https://github.com/actions/starter-workflows/issues/68#issuecomment-792338408) anyway.
 
 ```yml
 - name: Export Script Parameter
@@ -175,7 +175,7 @@ This is [another technique](https://github.com/Actions-R-Us/gh-actions-samples/b
   shell: bash
 ```
 
-Full example:
+Full working example illustrating these ideas:
 
 ```yml
 name: playing with setting env vars
@@ -221,6 +221,11 @@ outputs
 
      My environment variable 1, , My environment variable 3, My environment variable 4, My environment variable 5
      My environment variable 11
+
+### referring to vars
+
+https://stackoverflow.com/questions/63467662/github-action-define-workflow-level-environment-variable-between-jobs
+> You reference a workflow's environment variables with `${{ env.VARIABLE_NAME }}` not `${VARIABLE_NAME}`. The latter is bash syntax, but these are not shell environment variables, they're workflow environment variables. They're part of the workflow execution, not part of the shell's context.
 
 # Github Actions - Zip of artifacts
 
