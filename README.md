@@ -31,6 +31,16 @@ Spec files are auto generated, but once generated, you can tweak them.  Looks li
 
     pyinstaller rubber_band_async_custom.spec
 
+e.g.
+
+```yml
+- name: Build executable using Pyinstaller
+  run: |
+    # pyinstaller --windowed -F --noconfirm -i icons/Dakirby309-Simply-Styled-Mac-Front-Row.icns rubber_band_async.py
+    pyinstaller rubber_band_async_custom.spec
+    ls -l dist/
+```
+
 ## Pyinstaller - building a Mac app
 
 Without `--windowed`, you won't get an app bundle you can run. It will complain about needing a framework build of Python, even though you have one.  
@@ -165,3 +175,80 @@ This is [another technique](https://github.com/Actions-R-Us/gh-actions-samples/b
   shell: bash
 ```
 
+Full example:
+
+```yml
+name: playing with setting env vars
+on:
+  push:
+    branches: [ main ]
+jobs:
+  buildfun:
+    runs-on: ubuntu-18.04
+
+    # job level env - all steps within this job inherit these env vars
+    # Note: these cannot be conditionally done, unfortunately
+    env:
+      MY_ENV_1: My environment variable 1
+      MY_ENV_11: My environment variable 11
+
+    steps:
+    - name: Set MY_ENV_2 inside step, env var is lost after step completes
+      env:
+        MY_ENV_2: My environment variable 2
+      run: echo "we just set env.MY_ENV_2 to ${{ env.MY_ENV_2 }} aka $MY_ENV_2"
+
+    - name: Set MY_ENV_3 inside step, with job wide persistence
+      run: echo "MY_ENV_3=My environment variable 3" >> $GITHUB_ENV
+
+    - name: Set MY_ENV_4 inside step, conditionally, with job wide persistence
+      if: ${{ github.ref == 'refs/heads/main' }}    
+      run: echo "MY_ENV_4=My environment variable 4" >> $GITHUB_ENV
+
+    - name: Set MY_ENV_5 inside step, conditionally inside run, with job wide persistence
+      run: |
+        if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
+          echo "MY_ENV_5=My environment variable 5" >> $GITHUB_ENV
+        fi
+
+    - name: Report env, should see all except MY_ENV_2
+      run: |
+        echo $MY_ENV_1, $MY_ENV_2, $MY_ENV_3, $MY_ENV_4, $MY_ENV_5
+        echo ${{ env.MY_ENV_11 }}  # alt syntax for referring to vars
+```
+
+outputs
+
+     My environment variable 1, , My environment variable 3, My environment variable 4, My environment variable 5
+     My environment variable 11
+
+# Github Actions - Zip of artifacts
+
+Interestingly, artifacts are auto zipped on download. Thus if you have a zip step, you will end up with a zip inside a zip.
+
+The solution is to not zip at all, and just create the artifact - which can be a file or a dir. 
+
+Don't even name the artifact with a .zip extension for niceness, because the zip will be auto added by the act of downloading.  
+
+No need to zip it up since Github Actions auto zips artifacts when they are downloaded, and there
+is no way around this behaviour https://github.com/actions/upload-artifact/issues/39 
+
+In summary. The act of downloading 
+- zips up the artifact and 
+- adds the `.zip` extension to the downloaded file.
+
+Example:
+
+```yml
+# - name: Zip up dist/
+#   # run: zip -r dist.zip dist/rubber_band_async.app
+#   # run: zip -r dist.zip dist/rubber_band_async
+#   run: zip -r dist-${{ matrix.os }}.zip dist/
+
+- name: Save generated executable file as an artifact
+  uses: actions/upload-artifact@v2
+  with:
+    # name: rubber-band-${{ matrix.os }}.zip
+    name: rubber-band-${{ matrix.os }}
+    path: dist/
+```
