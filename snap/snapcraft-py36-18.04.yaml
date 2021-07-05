@@ -24,12 +24,12 @@ description: |
 
 grade: stable # devel # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
-base: core20
+base: core18
 
 apps:
     rubber-band-async:
         command: python3 $SNAP/rubber_band_async.py
-        extensions: [gnome-3-38]
+        extensions: [gnome-3-34]
         plugs: [unity7, audio-playback, home, network]
 
     #
@@ -87,7 +87,6 @@ parts:
         - libsdl2-image-2.0-0 
         - libsdl2-2.0-0
     python-packages:
-      - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython
-      # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
+        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
     requirements:
-      - /root/project/requirements.txt
+        - /root/project/requirements-linux-18.04.txt
