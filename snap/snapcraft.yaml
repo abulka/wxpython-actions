@@ -24,12 +24,6 @@
 # 
 # fixxx:
 #   override-build: |
-#     sudo apt-get install --reinstall python3-pkg-resources   <--- runs ok but doesn't fix problem
-#   plugin: dump                              <---- irrelevant
-#   source: ./snap/local/andy-diagnostics     <---- irrelevant
-# 
-# fixxx:
-#   override-build: |
 #     pip install --upgrade setuptools  <---- attempt to do this triggers same 'No module named pkg_resources' error
 #     pip install --upgrade distribute   
 #   plugin: dump                            <---- irrelevant, needed something, cos 'plugin' is a required property
@@ -41,6 +35,15 @@
 #   python-packages:
 #     - setuptools  <----- didn't help, attempt to avoid 'No module named pkg_resources' error, but how to upgrade? perhaps --force-reinstall ?
 #     - distribute  <----- didn't help, deprecated anyway apparently
+# 
+# this seemed to work!
+# 
+# fixxx:
+#   override-build: |
+#     sudo apt-get install --reinstall python3-pkg-resources   <--- runs ok SEEMS to fix problem! 
+#   plugin: dump                              <---- irrelevant
+#   source: ./snap/local/andy-diagnostics     <---- irrelevant
+# 
 
 name: rubber-band-async # you probably want to 'snapcraft register <name>'
 version: 'latest' # will generate e.g. 'rubber-band-async_latest_amd64.snap' - use 'git' (without quotes) to generate a snapfile named after the git commit e.g. rubber-band-async_0+git.6111883_amd64.snap 
@@ -72,7 +75,8 @@ base: core20
 
 apps:
     rubber-band-async:
-        command: python3 $SNAP/rubber_band_async.py
+        # command: python3 $SNAP/rubber_band_async.py  <-- failed? Failed to generate snap metadata: The specified command 'python3 $SNAP/rubber_band_async.py' defined in the app 'rubber-band-async' does not exist.
+        command: python $SNAP/rubber_band_async.py
         extensions: [gnome-3-38]
         plugs: [unity7, audio-playback, home, network]
 
