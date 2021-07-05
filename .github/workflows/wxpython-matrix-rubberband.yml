@@ -32,13 +32,15 @@ jobs:
     # pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
 
     steps:
-    - name: Set env var
-      env: |
-        if [ "$RUNNER_OS" == "Linux" ]; then 
-          PY_VERS: 3.8
-        else  
+    - name: Set env var 3.9
+      env:
           PY_VERS: 3.9
-        fi      
+      run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
+    - name: Set env var 3.9 conditionally
+      if: "$RUNNER_OS" == "Linux"
+      env:
+          PY_VERS: 3.8
+      run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
     - uses: actions/checkout@v2       
     - name: Setup Python please
       uses: actions/setup-python@v2
