@@ -61,3 +61,49 @@ Example:
 
 Use my `.github/workflows/wxpython-snap.yml` based on https://github.com/marketplace/actions/snapcraft-action plugn for github actions which can build snaps. It works, though you have to use LXD - rather than multipass.
 
+# yml linux notes
+
+## For pure binary builds
+
+Ubuntu 20.04 only has python 3.8 wheels at the moment, 
+for some reason py3.9 wheels are missing.
+
+So might have to drop back to 3.8 for everything, unless can change python version
+somehow depending on os? Thus this would allow 18.04 to have py3.9
+
+## As for snaps
+
+`core18` is py36 and it is hard to upgrade python - have a pending
+question in forums. 
+
+If we build using core20 then that might be easier and would give us py38
+by default.
+Alternatively, possibly a pyenv based solution could be achieved?
+
+Note re linux installs
+
+     pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython
+     pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+
+# Github Actions ENV vars
+
+
+https://github.com/actions/starter-workflows/issues/68
+
+The pain is that when you set variables in a step in your workflow, further steps can NOT see the VAR 🙊.
+
+> Each step runs in its own process in the virtual environment and has access to the workspace and filesystem. Because steps run in their own process, changes to environment variables are not preserved between steps.
+
+Officially you have to re-set VAR at each step. This sucks.
+
+
+workaround is
+https://github.com/Actions-R-Us/gh-actions-samples/blob/ffac4047d7d97409180efad5c503b4afb6c2a289/.github/workflows/step_param_from_env.yml#L21
+
+```yml
+    - name: Export Script Parameter
+      run: |
+           echo "::set-env name=MY_ACTION_SCRIPT::.github/step_param_from_env.sh"
+      shell: bash
+```
+

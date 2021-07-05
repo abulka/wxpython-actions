@@ -10,32 +10,21 @@ jobs:
     strategy:
       matrix:
         # os: [macos-latest, ubuntu-18.04, windows-latest]
-        os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
-
-    # For pure binary builds
-    # ----------------------
-    # ubuntu 20.04 only has python 3.8 wheels at the moment
-    # for some reason py3.9 wheels are missing.
-    # so might have to drop back to 3.8 for everything, unless can change python version
-    # somehow depending on os? Thus this would allow 18.04 to have py3.9
-    # 
-    # As for snaps
-    # ----------------------
-    # core18 is py36 and it is hard to upgrade python - have a pending
-    # question in forums. 
-    # If we build using core20 then that might be easier and would give us py38
-    # by default.
-    # Alternatively, possibly a pyenv based solution could be achieved?
-
-    # Note re linux installs
-    # pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython
-    # pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython
+        # os: [macos-latest, ubuntu-18.04, ubuntu-20.04]
+        os: [macos-latest]
 
     steps:
     - name: Set env var 3.9
+      # this seems to only affect this step. Whilst job wide env setting is possible, not sure how to do that
       env:
           PY_VERS: 3.9
       run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
+
+    - name: Set env var 3.9 using technique 2
+      run: echo "PYTHON_VERSION=3.7" >> $GITHUB_ENV
+    - name: Report env using technique 2
+      run: echo "PYTHON_VERSION is ${{ env.PYTHON_VERSION }} aka $PYTHON_VERSION"
+
     - name: Set env var 3.9 conditionally
     #   if: "$RUNNER_OS" == "Linux"
     #   env:
@@ -60,7 +49,8 @@ jobs:
           lsb_release -a 
         fi
         echo "Ideally using Python $PY_VERS"
-        
+        echo "Ideally PYTHON_VERSION is ${{ env.PYTHON_VERSION }} aka $PYTHON_VERSION"
+
         if [ "$RUNNER_OS" == "Linux" ]; then
           pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/${{ matrix.os }} wxPython
           sudo apt-get install libsdl2-mixer-2.0-0 libsdl2-image-2.0-0 libsdl2-2.0-0
