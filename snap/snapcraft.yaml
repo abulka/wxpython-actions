@@ -76,7 +76,7 @@ base: core20
 apps:
     rubber-band-async:
         # command: python3 $SNAP/rubber_band_async.py  <-- failed? Failed to generate snap metadata: The specified command 'python3 $SNAP/rubber_band_async.py' defined in the app 'rubber-band-async' does not exist.
-        command: python $SNAP/rubber_band_async.py
+        command: /usr/bin/env/python3 $SNAP/rubber_band_async.py
         extensions: [gnome-3-38]
         plugs: [unity7, audio-playback, home, network]
 
