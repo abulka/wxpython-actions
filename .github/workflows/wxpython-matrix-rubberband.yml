@@ -36,11 +36,11 @@ jobs:
       env:
           PY_VERS: 3.9
       run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
-    - name: Set env var 3.9 conditionally
-      if: "$RUNNER_OS" == "Linux"
-      env:
-          PY_VERS: 3.8
-      run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
+    # - name: Set env var 3.9 conditionally
+    #   if: "$RUNNER_OS" == "Linux"
+    #   env:
+    #       PY_VERS: 3.8
+    #   run: echo "we just set env.PY_VERS to ${{ env.PY_VERS }}"
     - uses: actions/checkout@v2       
     - name: Setup Python please
       uses: actions/setup-python@v2
