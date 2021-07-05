@@ -64,7 +64,7 @@ parts:
     source: ./snap/local/andy-diagnostics    
   rubber-band-async:
     plugin: python
-    # python-version: python3  # Additional properties are not allowed ('python-version' was unexpected)
+    # python-version: python3  # remove cos error: Additional properties are not allowed ('python-version' was unexpected)
     source: .
     stage-packages:
         - libssl-dev
@@ -88,6 +88,8 @@ parts:
         - libsdl2-image-2.0-0 
         - libsdl2-2.0-0
     python-packages:
+      - setuptools  # to avoid 'No module named pkg_resources' error, but how to upgrade?
+      - distribute
       # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
       # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython
       - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
