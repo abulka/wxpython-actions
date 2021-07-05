@@ -4,7 +4,8 @@ on: push
 
 jobs:
   my-snap-building-job:
-    runs-on: ubuntu-18.04
+    # runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Check out Git repository
@@ -18,27 +19,19 @@ jobs:
       - name: Use Snapcraft - show help
         run: snapcraft --help
 
-      # - name: Use Snapcraft - actually build a snap - needs multipass
-      #   run: |
-      #     time snapcraft --debug
-      #     ls -l
-      #     unsquashfs -l *.snap
-
       - name: Install Snapcraft with LXD - rather than multipass
         uses: samuelmeuli/action-snapcraft@v1
         with:
           use_lxd: true
+
       - name: Build snap
         run: |
           sg lxd -c 'snapcraft --use-lxd'
           ls -l
           # unsquashfs -l *.snap
 
-      - name: Zip it up
-        # run: zip -r rubber_band_async.zip dist/
-        run: zip mysnap.zip *.snap
-      - name: Save it as an artifact
+      - name: Save snap as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: mysnap_artifact.zip
-          path: mysnap.zip
+          name: mysnap_artifact
+          path: *.snap

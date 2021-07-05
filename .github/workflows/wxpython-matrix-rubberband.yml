@@ -4,7 +4,7 @@ on:
     branches: [ main ]
 jobs:
   build-mac-linux:
-    if: false
+    # if: false
 
     # runs-on: ubuntu-18.04
     runs-on: ${{ matrix.os }}
@@ -111,5 +111,5 @@ jobs:
     - name: Save generated executable file as an artifact
       uses: actions/upload-artifact@v2
       with:
-        name: rubber-band-${{ runner.os }}
+        name: rubber-band-windows
         path: dist/
