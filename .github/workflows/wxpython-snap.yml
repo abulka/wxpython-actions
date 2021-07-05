@@ -4,8 +4,7 @@ on: push
 
 jobs:
   my-snap-building-job:
-    # runs-on: ubuntu-18.04
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04  # ubuntu-20.04 breaks
 
     steps:
       - name: Check out Git repository
