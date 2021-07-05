@@ -74,14 +74,20 @@ parts:
     plugin: dump
     source: .
   copy-stuff-diagnostics:
-    plugin: dump
-    source: ./snap/local/andy-diagnostics
-  fixxxxx:
-    # attempt to avoid 'No module named pkg_resources' error
-    prepare: |
+    override-build: |
       # sudo apt-get install --reinstall python-pkg-resources
       pip install --upgrade setuptools
       pip install --upgrade distribute   
+    plugin: dump
+    source: ./snap/local/andy-diagnostics
+  # fixxxxx:
+  #   # attempt to avoid 'No module named pkg_resources' error
+  #   # hmmm 'plugin' is a required property
+  #   # prepare: |  <-- deprecated
+  #   override-build: |
+  #     # sudo apt-get install --reinstall python-pkg-resources
+  #     pip install --upgrade setuptools
+  #     pip install --upgrade distribute   
   rubber-band-async:
     plugin: python
     # python-version: python3  # remove cos error: Additional properties are not allowed ('python-version' was unexpected)
