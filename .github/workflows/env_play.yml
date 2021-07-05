@@ -27,11 +27,11 @@ jobs:
 
     - name: Set MY_ENV_5 inside step, conditionally inside run, with job wide persistence
       run: |
-        if [[ ${{ github.ref == 'refs/heads/main' }} ]]
+        if [[ ${{ github.ref == 'refs/heads/main' }} ]]; then
           echo "MY_ENV_5=My environment variable 5" >> $GITHUB_ENV
         fi
 
-    - name: Report env
+    - name: Report env, should see all except MY_ENV_2
       run: |
         echo $MY_ENV_1, $MY_ENV_2, $MY_ENV_3, $MY_ENV_4, $MY_ENV_5
-        echo ${{ env.MY_ENV_1 }}  # alt syntax for referring to vars
+        echo ${{ env.MY_ENV_11 }}  # alt syntax for referring to vars
