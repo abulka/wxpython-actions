@@ -11,6 +11,30 @@
 #     from pkg_resources import load_entry_point
 # ModuleNotFoundError: No module named 'pkg_resources'
 # Failed to build 'rubber-band-async'.    
+# 
+# Error discussion https://stackoverflow.com/questions/7446187/no-module-named-pkg-resources
+# 
+# Attempt to avoid 'No module named pkg_resources' error
+# Attempts to fix: (note this is the only way I can run arbitrary bash commands inside
+#  the core20 vm) was to use override-build on a part. And since each part MUST have
+# a plugin: I just used dump plugin again - harmless enough. Wish they provided a bash plugin 
+# though there are 
+# 
+# All these failed to fix the problem 
+# 
+# fixxx:
+#   override-build: |
+#     sudo apt-get install --reinstall python3-pkg-resources
+#   plugin: dump
+#   source: ./snap/local/andy-diagnostics
+# 
+# fixxx:
+#   override-build: |
+#     pip install --upgrade setuptools  <---- attempt to do this triggers same 'No module named pkg_resources' error
+#     pip install --upgrade distribute   
+#   plugin: dump                            <---- irrelevant, needed something, cos 'plugin' is a required property
+#   source: ./snap/local/andy-diagnostics   <---- irrelevant, specify any dummy file
+# 
 
 name: rubber-band-async # you probably want to 'snapcraft register <name>'
 version: 'latest' # will generate e.g. 'rubber-band-async_latest_amd64.snap' - use 'git' (without quotes) to generate a snapfile named after the git commit e.g. rubber-band-async_0+git.6111883_amd64.snap 
@@ -77,26 +101,12 @@ parts:
     plugin: dump
     source: ./snap/local/andy-diagnostics
 
-  fixxx:
+  fix-no-module-named-pkg_resources:
     override-build: |
-      sudo apt-get install --reinstall python-pkg-resources
+      sudo apt-get install --reinstall python3-pkg-resources
     plugin: dump
     source: ./snap/local/andy-diagnostics
-  # fixxx:
-  #   override-build: |
-  #     pip install --upgrade setuptools  <---- attempt to do this triggers same 'No module named pkg_resources' error
-  #     pip install --upgrade distribute   
-  #   plugin: dump
-  #   source: ./snap/local/andy-diagnostics
-  # fixxxxx:
-  #   # attempt to avoid 'No module named pkg_resources' error
-  #   # hmmm 'plugin' is a required property
-  #   # prepare: |  <-- deprecated
-  #   override-build: |
-  #     # sudo apt-get install --reinstall python-pkg-resources
-  #     pip install --upgrade setuptools
-  #     pip install --upgrade distribute   
-  
+
   rubber-band-async:
     plugin: python
     # python-version: python3  # remove cos error: Additional properties are not allowed ('python-version' was unexpected)
