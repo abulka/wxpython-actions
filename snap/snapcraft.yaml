@@ -84,7 +84,10 @@ parts:
       ln -s /usr/lib/python3.8/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.8/distutils
       mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
       ln -s /usr/include/python3.8 $SNAPCRAFT_PART_INSTALL/usr/include/python3.8
+
+      apt-get install curl
       curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3
+      
       snapcraftctl build
 
     stage-packages:
