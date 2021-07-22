@@ -29,7 +29,8 @@ base: core20
 
 apps:
     rubber-band-async:
-        command: python3 $SNAP/rubber_band_async.py
+        # command: python3 $SNAP/rubber_band_async.py
+        command: python $SNAP/rubber_band_async.py
         # extensions: [gnome-3-34]
         extensions: [gnome-3-38]
         plugs: [unity7, audio-playback, home, network]
@@ -46,8 +47,10 @@ apps:
     # Run Python interpreter - run with 'pynsource.python'
     # Run Python interpreter and trace imports - run with e.g. 'pynsource.python-v'
 
-    python:
+    python3:
         command: python3
+    pythonx:
+        command: python
     python-v:
         command: python3 -V
     python-vers:
