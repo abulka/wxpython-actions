@@ -30,7 +30,8 @@ base: core20
 apps:
     rubber-band-async:
         # command: python3 $SNAP/rubber_band_async.py
-        command: python $SNAP/rubber_band_async.py
+        # command: python $SNAP/rubber_band_async.py
+        command: $SNAP/rubber_band_async.py
         # extensions: [gnome-3-34]
         extensions: [gnome-3-38]
         plugs: [unity7, audio-playback, home, network]
@@ -88,12 +89,20 @@ parts:
       mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
       ln -s /usr/include/python3.8 $SNAPCRAFT_PART_INSTALL/usr/include/python3.8
 
-      apt-get install --yes curl
-      curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3
+      # apt-get install --yes curl
+      # curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3
 
+      which python3
+      which pip
+      echo hi
+      ls /usr/bin
+      echo now for bin
+      ls bin
+      
       snapcraftctl build
 
     stage-packages:
+        - curl
         - python3.8-venv
         - libssl-dev
         - libjpeg-dev
