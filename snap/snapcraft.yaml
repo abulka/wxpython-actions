@@ -73,21 +73,21 @@ parts:
     # stage-packages:
     #   - python3.9-venv
     build-packages:
-      - python3.9-venv
-      - python3.9-dev
+      - python3.8-venv
+      - python3.8-dev
     build-environment:
-      - SNAPCRAFT_PYTHON_INTERPRETER: python3.9
+      - SNAPCRAFT_PYTHON_INTERPRETER: python3.8
     override-build: |
       # Workaround a bug in snapcraft python plugin
       # https://forum.snapcraft.io/t/build-a-snap-with-any-version-of-python-i-want/10420/8
-      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
-      ln -s /usr/lib/python3.9/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.9/distutils
+      rm -rf $SNAPCRAFT_PART_INSTALL/usr/lib/python3.8/distutils
+      ln -s /usr/lib/python3.8/distutils $SNAPCRAFT_PART_INSTALL/usr/lib/python3.8/distutils
       mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
-      ln -s /usr/include/python3.9 $SNAPCRAFT_PART_INSTALL/usr/include/python3.9
+      ln -s /usr/include/python3.8 $SNAPCRAFT_PART_INSTALL/usr/include/python3.8
       snapcraftctl build
 
     stage-packages:
-        - python3.9-venv
+        - python3.8-venv
         - libssl-dev
         - libjpeg-dev
         - libtiff-dev
@@ -113,7 +113,8 @@ parts:
     python-packages:
         # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
         # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython  # will pick up py36 no doubt NO FAILS
-        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp39-cp39-linux_x86_64.whl
+        # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp39-cp39-linux_x86_64.whl
+        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp38-cp38-linux_x86_64.whl
 
     requirements:
         - /root/project/requirements.txt
