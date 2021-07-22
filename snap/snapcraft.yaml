@@ -24,12 +24,14 @@ description: |
 
 grade: stable # devel # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
-base: core18
+# base: core18
+base: core20
 
 apps:
     rubber-band-async:
         command: python3 $SNAP/rubber_band_async.py
-        extensions: [gnome-3-34]
+        # extensions: [gnome-3-34]
+        extensions: [gnome-3-38]
         plugs: [unity7, audio-playback, home, network]
 
     #
@@ -64,7 +66,8 @@ parts:
     source: ./snap/local/andy-diagnostics    
   rubber-band-async:
     plugin: python
-    python-version: python3
+    # python-version: python3
+    # python-version: python3  # core20, remove cos error: Additional properties are not allowed ('python-version' was unexpected)
     source: .
 
     # stage-packages:
@@ -92,7 +95,10 @@ parts:
         - libnotify-dev
         - freeglut3
         - ibus-gtk3
-        - libwebkitgtk-3.0-0
+
+        # - libwebkitgtk-3.0-0 <------ the only change core18 -> core20 in this stage-packages section
+        - libwebkit2gtk-4.0-37
+
         - zlib1g
         - libsm6
         - libpulse0
@@ -105,7 +111,9 @@ parts:
         - libsdl2-image-2.0-0 
         - libsdl2-2.0-0
     python-packages:
-        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
+        # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
         # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython  # will pick up py36 no doubt NO FAILS
+        - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04/wxPython-4.1.1-cp39-cp39-linux_x86_64.whl
+
     requirements:
         - /root/project/requirements.txt
