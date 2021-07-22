@@ -79,6 +79,7 @@ parts:
     build-packages:
       - python3.8-venv
       - python3.8-dev
+      - curl
     build-environment:
       - SNAPCRAFT_PYTHON_INTERPRETER: python3.8
     override-build: |
@@ -94,15 +95,17 @@ parts:
 
       which python3
       which pip
-      echo hi
+      echo lets look in /usr/bin
       ls /usr/bin
-      echo now for bin
+      echo lets look in usr/bin
+      ls usr/bin
+      echo lets look in bin
       ls bin
-      
+
       snapcraftctl build
 
     stage-packages:
-        - curl
+        # - curl  doesn't help - need to have this in build or apt-get it
         - python3.8-venv
         - libssl-dev
         - libjpeg-dev
