@@ -85,9 +85,9 @@ parts:
       mkdir -p $SNAPCRAFT_PART_INSTALL/usr/include/
       ln -s /usr/include/python3.8 $SNAPCRAFT_PART_INSTALL/usr/include/python3.8
 
-      apt-get install curl
+      apt-get install --yes curl
       curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3
-      
+
       snapcraftctl build
 
     stage-packages:
