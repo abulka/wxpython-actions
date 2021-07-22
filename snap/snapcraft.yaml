@@ -32,7 +32,11 @@ apps:
         # command: python3 $SNAP/rubber_band_async.py
         # command: python $SNAP/rubber_band_async.py
         # command: $SNAP/rubber_band_async.py
-        command: ls $SNAP
+        # command: ls $SNAP  # even this FAILS - The specified command 'ls $SNAP' defined in the app 'rubber-band-async' does not exist.
+        command: |
+          pwd
+          ls -l
+          venv/bin/python rubber_band_async.py
 
         # extensions: [gnome-3-34]
         extensions: [gnome-3-38]
@@ -109,8 +113,24 @@ parts:
       # ls bin || true
       ls -l bin/build || true
 
-      echo lets look in dollar snap
-      ls -l $SNAP || true
+      echo lets look in dollar snap which expands to /snap/snapcraft/6596
+      # ls -l $SNAP || true
+
+      # drwxr-xr-x 4 root root   0 Jun 18 21:49 bin
+      # drwxr-xr-x 7 root root   0 Jun 18 21:49 etc
+      # drwxr-xr-x 7 root root   0 Jun 18 21:49 legacy_snapcraft
+      # drwxr-xr-x 5 root root   0 Jun 18 21:49 lib
+      # drwxr-xr-x 2 root root   0 Jun 18 21:49 meta
+      # drwxr-xr-x 6 root root   0 Jun 18 21:49 share
+      # drwxr-xr-x 3 root root   0 Jun 18 21:49 snap
+      # -rw-r--r-- 1 root root 992 Jun 18 21:40 snapcraft-completion
+      # drwxr-xr-x 6 root root   0 Jun 18 21:49 usr
+      # drwxr-xr-x 5 root root   0 Jun 18 21:48 var
+
+      # This interesting command gets issued, which creates the python venv in 'install' dir
+      # Note the python that is invoked. 
+      #  
+      # python3.8 -m venv /root/parts/rubber-band-async/install
 
       snapcraftctl build
 
