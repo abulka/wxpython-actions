@@ -97,7 +97,7 @@ parts:
       curl -sS https://bootstrap.pypa.io/get-pip.py | sudo python3
 
       # which python3  # /snap/gnome-3-38-2004-sdk/current/usr/bin/python3
-      which pip
+      # which pip      # /snap/gnome-3-38-2004-sdk/current/usr/bin/pip
 
       # echo lets look in /usr/bin  <-- exists OK but does not list python
       # ls /usr/bin
@@ -105,9 +105,12 @@ parts:
       # echo lets look in usr/bin   <--- does not exist, FAILS
       # ls usr/bin
 
-      echo lets look in bin  <-- exists, contains the folder 'build'
+      echo lets look in bin  # <-- exists, contains the folder 'build'
       # ls bin || true
       ls -l bin/build || true
+
+      echo lets look in dollar snap
+      ls -l $SNAP || true
 
       snapcraftctl build
 
