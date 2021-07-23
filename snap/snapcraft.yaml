@@ -62,7 +62,7 @@ apps:
     # no longer allowed to pass quoted stuff 
     # python-vers:
     #     command: bin/python3 -c "import sys; print(sys.version)"
-    
+
     python-vvv:
         command: bin/python3 -vvv
     report:
@@ -159,6 +159,7 @@ parts:
         - libsdl2-mixer-2.0-0 
         - libsdl2-image-2.0-0 
         - libsdl2-2.0-0
+        - libffi7
     python-packages:
         # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython-4.1.0-cp36-cp36m-linux_x86_64.whl
         # - https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04/wxPython  # will pick up py36 no doubt NO FAILS
